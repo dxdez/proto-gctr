@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    command: bash -c "/gctr_app"
+    container_name: gctr_app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
