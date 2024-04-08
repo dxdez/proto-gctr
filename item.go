@@ -59,3 +59,64 @@ func fetchCount() (int, error) {
 	}
 	return count, nil
 }
+
+func fetchCompletedCount() (int, error) {
+	var count int
+	err := DB.QueryRow("SELECT COUNT(*) FROM items WHERE checked = 1;").Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func insertItem(title string) (Item, error) {
+	count, err := fetchCount()
+	if err != nil {
+		return Item{}, err
+	}
+	var id int
+	err = DB.QueryRow("INSERT INTO items (title, position) VALUES (?, ?) returning id", title, count).Scan(&id)
+	if err != nil {
+		return Item{}, err
+	}
+	item := Item{ID: id, Title: title, Checked: false}
+	return item, nil
+}
+
+func deleteItem(currentContext context.Context, ID int) error {
+	_, err := DB.Exec("DELETE FROM items WHERE id = (?)", ID)
+	if err != nil {
+		return err
+	}
+	rows, err := DB.Query("SELECT id FROM items ORDER BY position")
+	if err != nil {
+		return err
+	}
+	var ids []int
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		if err != nil {
+			return err
+		}
+		ids = append(ids, id)
+	}
+	transaction, err := DB.BeginTx(currentContext, nil)
+	if err != nil {
+		return err
+	}
+	defer transaction.Rollback()
+	for idx, id := range ids {
+		_, err := DB.Exec("UPDATE items SET position = (?) WHERE id = (?)", idx, id)
+		if err != nil {
+			return err
+		}
+	}
+	err = transaction.Commit()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
