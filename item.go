@@ -83,7 +83,7 @@ func insertItem(title string) (Item, error) {
 	return item, nil
 }
 
-func deleteItem(currentContext context.Context, ID int) error {
+func deleteItem(ctx context.Context, ID int) error {
 	_, err := DB.Exec("DELETE FROM items WHERE id = (?)", ID)
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func deleteItem(currentContext context.Context, ID int) error {
 		}
 		ids = append(ids, id)
 	}
-	transaction, err := DB.BeginTx(currentContext, nil)
+	transaction, err := DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -119,4 +119,29 @@ func deleteItem(currentContext context.Context, ID int) error {
 	return nil
 }
 
+func orderItem(ctx context.Context, values []int) error {
+	transaction, err := DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer transaction.Rollback()
+	for currentValue, value := range values {
+		_, err := transaction.Exec("update items set position = (?) where id = (?)", currentValue, value)
+		if err != nil {
+			return err
+		}
+	}
+	if err := transaction.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
 
+func toggleItem(ID int) (Item, error) {
+	var item Item
+	err := DB.QueryRow("update items set checked = case when checked = 1 then 0 else 1 end where id = (?) returning id, title, checked", ID).Scan(&item.ID, &item.Title, &item.Checked)
+	if err != nil {
+		return Item{}, err
+	}
+	return item, nil
+}
