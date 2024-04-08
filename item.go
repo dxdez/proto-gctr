@@ -35,9 +35,27 @@ func fetchItems() ([]Item, error) {
 
 func fetchItem(ID int) (Item, error) {
 	var currentItem Item
-	err := DB.QueryRow("SELECT id, title, checked FROM items WHERE id = (?)", ID).Scan(&currentItem.ID, &currentItem.Title, &currentItem.Completed)
+	err := DB.QueryRow("SELECT id, title, checked FROM items WHERE id = (?)", ID).Scan(&currentItem.ID, &currentItem.Title, &currentItem.Checked)
 	if err != nil {
 		return Item{}, err
 	}
 	return currentItem, nil
+}
+
+func updateItem(ID int, title string) (Item, error) {
+	var currentItem Item
+	err := DB.QueryRow("UPDATE items SET title = (?) WHERE id = (?) returning id, title, checked", title, ID).Scan(&item.ID, &item.Title, &item.Checked)
+	if err != nil {
+		return Item{}, err
+	}
+	return item, nil
+}
+
+func fetchCount() (int, error) {
+	var count int
+	err := DB.QueryRow("SELECT COUNT(*) FROM items;").Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
