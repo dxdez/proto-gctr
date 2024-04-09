@@ -44,7 +44,7 @@ func fetchItem(ID int) (Item, error) {
 
 func updateItem(ID int, title string) (Item, error) {
 	var currentItem Item
-	err := DB.QueryRow("UPDATE items SET title = (?) WHERE id = (?) returning id, title, checked", title, ID).Scan(&item.ID, &item.Title, &item.Checked)
+	err := DB.QueryRow("UPDATE items SET title = (?) WHERE id = (?) RETURNING id, title, checked", title, ID).Scan(&item.ID, &item.Title, &item.Checked)
 	if err != nil {
 		return Item{}, err
 	}
@@ -75,7 +75,7 @@ func insertItem(title string) (Item, error) {
 		return Item{}, err
 	}
 	var id int
-	err = DB.QueryRow("INSERT INTO items (title, position) VALUES (?, ?) returning id", title, count).Scan(&id)
+	err = DB.QueryRow("INSERT INTO items (title, position) VALUES (?, ?) RETURNING id", title, count).Scan(&id)
 	if err != nil {
 		return Item{}, err
 	}
@@ -126,7 +126,7 @@ func orderItem(ctx context.Context, values []int) error {
 	}
 	defer transaction.Rollback()
 	for currentValue, value := range values {
-		_, err := transaction.Exec("update items set position = (?) where id = (?)", currentValue, value)
+		_, err := transaction.Exec("UPDATE items SET position = (?) WHERE id = (?)", currentValue, value)
 		if err != nil {
 			return err
 		}
@@ -139,7 +139,7 @@ func orderItem(ctx context.Context, values []int) error {
 
 func toggleItem(ID int) (Item, error) {
 	var item Item
-	err := DB.QueryRow("update items set checked = case when checked = 1 then 0 else 1 end where id = (?) returning id, title, checked", ID).Scan(&item.ID, &item.Title, &item.Checked)
+	err := DB.QueryRow("UPDATE items SET checked = case WHEN checked = 1 THEN 0 ELSE 1 END WHERE id = (?) RETURNING id, title, checked", ID).Scan(&item.ID, &item.Title, &item.Checked)
 	if err != nil {
 		return Item{}, err
 	}
