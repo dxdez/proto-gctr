@@ -24,12 +24,18 @@ func main() {
 		log.Panic(dbRunOrError)
 	}
 
+	// Parse Templates
+	parseOrError = parseTemplates()
+	if parseOrError != nil {
+		log.Panic(parseOrError)
+	}
+
+
 	// Establish router
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
 	appRouter.Get("/", func(w http.ResponseWriter, _ *http.Request) {
-		tmpl, _ := template.New("").ParseFiles("templates/index.html")
-		tmpl.ExecuteTemplate(w, "base", nil)
+		currentTemplate.ExecuteTemplate(w, "base", nil)
 	})
 
 	// Run application
