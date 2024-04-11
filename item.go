@@ -1,5 +1,7 @@
 package main
 
+import "context"
+
 type Item struct {
 	ID int
 	Title string
@@ -8,8 +10,8 @@ type Item struct {
 
 type ItemLists struct {
 	Items []Item
-	Count Int
-	CountChecked Int
+	Count int
+	CountChecked int
 }
 
 func fetchItems() ([]Item, error) {
@@ -43,7 +45,7 @@ func fetchItem(ID int) (Item, error) {
 }
 
 func updateItem(ID int, title string) (Item, error) {
-	var currentItem Item
+	var item Item
 	err := DB.QueryRow("UPDATE items SET title = (?) WHERE id = (?) RETURNING id, title, checked", title, ID).Scan(&item.ID, &item.Title, &item.Checked)
 	if err != nil {
 		return Item{}, err
@@ -101,18 +103,18 @@ func deleteItem(ctx context.Context, ID int) error {
 		}
 		ids = append(ids, id)
 	}
-	transaction, err := DB.BeginTx(ctx, nil)
+	tx, err := DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
-	defer transaction.Rollback()
+	defer tx.Rollback()
 	for idx, id := range ids {
 		_, err := DB.Exec("UPDATE items SET position = (?) WHERE id = (?)", idx, id)
 		if err != nil {
 			return err
 		}
 	}
-	err = transaction.Commit()
+	err = tx.Commit()
 	if err != nil {
 		return err
 	}
