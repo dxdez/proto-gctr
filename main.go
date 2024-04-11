@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 	"fmt"
-	"html/template"
 	"log"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -14,20 +13,20 @@ func main() {
 	fmt.Println("RUN PROGRAM on Port 8080 ----------")
 
 	// Start database
-	dbRunOrError := openDB()
-	if dbRunOrError != nil {
-		log.Panic(dbRunOrError)
+	runOrError := openDB()
+	if runOrError != nil {
+		log.Panic(runOrError)
 	}
 	defer closeDB()
-	dbRunOrError = setupDB()
-	if dbRunOrError != nil {
-		log.Panic(dbRunOrError)
+	runOrError = setupDB()
+	if runOrError != nil {
+		log.Panic(runOrError)
 	}
 
 	// Parse Templates
-	parseOrError = parseTemplates()
-	if parseOrError != nil {
-		log.Panic(parseOrError)
+	runOrError = parseTemplates()
+	if runOrError != nil {
+		log.Panic(runOrError)
 	}
 
 
