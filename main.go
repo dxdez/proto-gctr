@@ -29,13 +29,10 @@ func main() {
 		log.Panic(runOrError)
 	}
 
-
 	// Establish router
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
-	appRouter.Get("/", func(w http.ResponseWriter, _ *http.Request) {
-		currentTemplate.ExecuteTemplate(w, "base", nil)
-	})
+	appRouter.Get("/", handleGetTasks)
 
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
