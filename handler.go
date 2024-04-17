@@ -8,7 +8,7 @@ import (
 func handleGetTasks(w http.ResponseWriter, _ *http.Request) {
 	items, err := fetchItems()
 	if err != nil {
-		log.Printf("error fetching tasks %v", err)
+		log.Printf("error fetching items %v", err)
 		return
 	}
 	count, err := fetchCount()
@@ -25,4 +25,18 @@ func handleGetTasks(w http.ResponseWriter, _ *http.Request) {
 		CountChecked: completedCount,
 	}
 	currentTemplate.ExecuteTemplate(w, "base", data)
+}
+
+func handleCreateTask(w http.ResponseWriter, r *http.Request) {
+	title := r.FormValue("title")
+	if title == "" {
+		return
+	}
+	_, err := insertItem(title)
+	if err != nil {
+		log.Printf("error inserting item %v", err)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	currentTemplate.ExecuteTemplate(w, "Form", nil)
 }
