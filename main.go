@@ -33,6 +33,7 @@ func main() {
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
 	appRouter.Get("/", handleGetTasks)
+	appRouter.Post("/tasks", handleCreateTask)
 
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
