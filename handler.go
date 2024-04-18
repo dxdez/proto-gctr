@@ -37,6 +37,12 @@ func handleCreateTask(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error inserting item %v", err)
 		return
 	}
+	count, err := fetchCount()
+	if err != nil {
+		log.Printf("error fetching count %v", err)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
 	currentTemplate.ExecuteTemplate(w, "Form", nil)
+	currentTemplate.ExecuteTemplate(w, "TotalCount", map[string]any{"Count": count, "SwapOOB": true})
 }
