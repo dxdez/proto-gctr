@@ -22,7 +22,7 @@
 
         <div id="items" class="space-y-2.5 mt-4">
           {{ range .Items }}
-            {{ template "Item" }}
+            {{ template "Item" dict "Item" . }}
           {{ end }}
         </div>
 	</body>
