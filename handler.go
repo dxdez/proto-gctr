@@ -35,7 +35,7 @@ func handleCreateItem(w http.ResponseWriter, r *http.Request) {
 	if title == "" {
 		return
 	}
-	_, err := insertItem(title)
+	item, err := insertItem(title)
 	if err != nil {
 		log.Printf("error inserting item %v", err)
 		return
@@ -47,10 +47,11 @@ func handleCreateItem(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	currentTemplate.ExecuteTemplate(w, "Form", nil)
+	currentTemplate.ExecuteTemplate(w, "Item", map[string]any{"Item": item, "SwapOOB": true})
 	currentTemplate.ExecuteTemplate(w, "TotalCount", map[string]any{"Count": count, "SwapOOB": true})
 }
 
-func handleToggleItem(_ http.ResponseWriter, r *http.Request) {
+func handleToggleItem(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		log.Printf("error parsing id into int %v", err)
@@ -61,4 +62,10 @@ func handleToggleItem(_ http.ResponseWriter, r *http.Request) {
 		log.Printf("error toggling item %v", err)
 		return
 	}
+	completedCount, err := fetchCompletedCount()
+	if err != nil {
+		log.Printf("error fetching completed count %v", err)
+		return
+	}
+	currentTemplate.ExecuteTemplate(w, "CompletedCount", map[string]any{"Count": completedCount, "SwapOOB": true})
 }
