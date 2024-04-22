@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func handleGetTasks(w http.ResponseWriter, _ *http.Request) {
+func handleGetItems(w http.ResponseWriter, _ *http.Request) {
 	items, err := fetchItems()
 	if err != nil {
 		log.Printf("error fetching items %v", err)
@@ -30,7 +30,7 @@ func handleGetTasks(w http.ResponseWriter, _ *http.Request) {
 	currentTemplate.ExecuteTemplate(w, "base", data)
 }
 
-func handleCreateTask(w http.ResponseWriter, r *http.Request) {
+func handleCreateItem(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	if title == "" {
 		return
@@ -50,7 +50,7 @@ func handleCreateTask(w http.ResponseWriter, r *http.Request) {
 	currentTemplate.ExecuteTemplate(w, "TotalCount", map[string]any{"Count": count, "SwapOOB": true})
 }
 
-func handleToggleTask(_ http.ResponseWriter, r *http.Request) {
+func handleToggleItem(_ http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		log.Printf("error parsing id into int %v", err)
@@ -58,7 +58,7 @@ func handleToggleTask(_ http.ResponseWriter, r *http.Request) {
 	}
 	_, err = toggleItem(id)
 	if err != nil {
-		log.Printf("error toggling task %v", err)
+		log.Printf("error toggling item %v", err)
 		return
 	}
 }

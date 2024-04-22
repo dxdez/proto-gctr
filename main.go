@@ -32,9 +32,9 @@ func main() {
 	// Establish router
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
-	appRouter.Get("/", handleGetTasks)
-	appRouter.Post("/tasks", handleCreateTask)
-	appRouter.Put("/tasks/{id}/toggle", handleToggleTask)
+	appRouter.Get("/", handleGetItems)
+	appRouter.Post("/items", handleCreateItem)
+	appRouter.Put("/items/{id}/toggle", handleToggleItem)
 
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
