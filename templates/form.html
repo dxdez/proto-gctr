@@ -29,7 +29,7 @@
 					  />
 			</svg>
 		</button>
-		<input type="checkbox" class="w-5 h-5 text-blue-700 bg-white border-gray-300 rounded focus:ring-blue-600" />
+		<input type="checkbox" {{if .Item.Checked }}checked{{ end }} hx-put="/tasks/{{.Item.ID}}/toggle" class="w-5 h-5 text-blue-700 bg-white border-gray-300 rounded focus:ring-blue-600" />
 	</div>
 </div>
 {{ end }}

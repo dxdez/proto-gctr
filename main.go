@@ -34,6 +34,7 @@ func main() {
 	appRouter.Use(middleware.Logger)
 	appRouter.Get("/", handleGetTasks)
 	appRouter.Post("/tasks", handleCreateTask)
+	appRouter.Put("/tasks/{id}/toggle", handleToggleTask)
 
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
