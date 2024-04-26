@@ -36,7 +36,8 @@ func main() {
 	appRouter.Post("/items", handleCreateItem)
 	appRouter.Put("/items/{id}/toggle", handleToggleItem)
 	appRouter.Delete("/items/{id}", handleDeleteItem)
-
+	appRouter.Get("/items/{id}/edit", handleEditItem)
+	appRouter.Put("/items/{id}", handleUpdateItem)
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
 }
