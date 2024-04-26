@@ -105,3 +105,21 @@ func handleEditItem(w http.ResponseWriter, r *http.Request) {
 	}
 	currentTemplate.ExecuteTemplate(w, "Item", map[string]any{"Item": item, "Editing": true})
 }
+
+func handleUpdateItem(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		log.Printf("error parsing id into int %v", err)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		return
+	}
+	item, err := updateItem(id, title)
+	if err != nil {
+		log.Printf("error fetching task with id %d %v", id, err)
+		return
+	}
+	currentTemplate.ExecuteTemplate(w, "Item", map[string]any{"Item": item})
+}
