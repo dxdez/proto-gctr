@@ -123,3 +123,28 @@ func handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 	}
 	currentTemplate.ExecuteTemplate(w, "Item", map[string]any{"Item": item})
 }
+
+func handleOrderItems(_ http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Printf("error parsing form %v", err)
+	}
+	var values []int
+	for k, v := range r.Form {
+		if k == "item" {
+			for _, v := range v {
+				value, err := strconv.Atoi(v)
+				if err != nil {
+					log.Printf("error parsing id into int %v", err)
+					return
+				}
+				values = append(values, value)
+			}
+		}
+	}
+	err = orderItem(r.Context(), values)
+	if err != nil {
+		log.Printf("error ordering tasks %v", err)
+	}
+}
+

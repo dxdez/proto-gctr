@@ -11,7 +11,7 @@
 		</script>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-		<title>Test Page</title>
+		<title>GCTR</title>
 	</head>
 	<body>
 		<div class="max-w-screen-md mx-auto mt-8">
@@ -22,7 +22,7 @@
 
 			{{ template "Form" }}
 
-			<div id="items" class="space-y-2.5 mt-4">
+			<div hx-put="/items" hx-trigger="end" hx-swap="none" id="items" class="space-y-2.5 mt-4">
 				{{ range .Items }}
 					{{ template "Item" dict "Item" . "SwapOOB" false "Editing" false }}
 				{{ end }}
