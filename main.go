@@ -32,6 +32,11 @@ func main() {
 	// Establish router
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
+
+	// Serve static files from the "static" directory
+	fileServer := http.FileServer(http.Dir("static"))
+	appRouter.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+
 	appRouter.Get("/", handleGetItems)
 	appRouter.Post("/items", handleCreateItem)
 	appRouter.Put("/items", handleOrderItems)
