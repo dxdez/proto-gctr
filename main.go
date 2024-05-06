@@ -32,12 +32,19 @@ func main() {
 	// Establish router
 	appRouter := chi.NewRouter()
 	appRouter.Use(middleware.Logger)
+
+	// Serve static files from the "static" directory
+	fileServer := http.FileServer(http.Dir("static"))
+	appRouter.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+
 	appRouter.Get("/", handleGetItems)
 	appRouter.Post("/items", handleCreateItem)
+	appRouter.Put("/items", handleOrderItems)
 	appRouter.Put("/items/{id}/toggle", handleToggleItem)
 	appRouter.Delete("/items/{id}", handleDeleteItem)
 	appRouter.Get("/items/{id}/edit", handleEditItem)
 	appRouter.Put("/items/{id}", handleUpdateItem)
+
 	// Run application
 	http.ListenAndServe(":8080", appRouter)
 }
