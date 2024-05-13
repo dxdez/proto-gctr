@@ -52,5 +52,15 @@ docker compose up -d
 
 Execute the following command to shutdown:
 `````
-docker compose down -v
+docker compose down
 `````
+
+### Notes on Project Dependencies
+
+For running a production-level application from this project, it is recommended to use the following dependencies directly:
+- [Tailwind CSS](https://tailwindcss.com/ "Tailwind CSS") - Tailwind CSS is a utility-first CSS framework that provides a set of low-level utility classes to build custom designs. The project repository includes a link to the Tailwind CSS CDN
+- [HTMX](https://htmx.org/ "HTMX") - HTMX is a library that allows you to access modern browser features directly from HTML, rather than using JavaScript. The project repository includes a link to the HTMX CDN
+
+For production use, it is recommended to have the source of these dependencies as opposed to using only the CDN links.
+
+
