@@ -1,6 +1,6 @@
 # Proto GO CRUD Task Rendering (GCTR)
 
-Proto GCTR is a lightweight web application designed for experimenting with GO and HTMX. It simplifies the creation of dynamic web interfaces by combining the efficiency of GO with the interactivity of HTMX, without the need for bulky front-end libraries. This application makes use of basic net/http and CRUD functionality. This project is for experimental purposes only.
+Proto GCTR is a lightweight web application designed for experimenting with GO and HTMX. It simplifies the creation of dynamic web interfaces by combining the efficiency of GO with the interactivity of HTMX, without the need for bulky front-end libraries. This application makes use of basic net/http, CRUD functionality and is for experimental purposes only.
 
 ### Features
 
